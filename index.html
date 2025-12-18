@@ -24,12 +24,18 @@
 
   <!-- Math Question Overlay -->
   <div id="questionBox">
-    <h2>Oh no! Solve the monster's challenge!</h2>
+    <h2>Oh no! Solve the monster’s challenge!</h2>
     <p id="questionText"></p>
     <input type="number" id="answerInput">
     <br><br>
     <button onclick="submitAnswer()">Submit</button>
     <div id="correctMessage">🎉 Yay! Correct! 🎉</div>
+  </div>
+
+  <!-- Full-screen Game Over Screen -->
+  <div id="gameOverScreen">
+    <h1 id="gameOverMessage">Game Over!</h1>
+    <button onclick="restartGame()">Restart</button>
   </div>
 
   <script src="game.js"></script>

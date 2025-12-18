@@ -168,6 +168,18 @@ function submitAnswer() {
 
 // Game over
 function gameOver(message = "Game Over!") {
-  alert(message);
+  gameRunning = false;
+  paused = true;
+
+  // Show game over screen
+  const screen = document.getElementById("gameOverScreen");
+  screen.style.display = "block";
+
+  // Update message
+  document.getElementById("gameOverMessage").innerText = message;
+}
+
+// Restart game
+function restartGame() {
   location.reload();
 }
