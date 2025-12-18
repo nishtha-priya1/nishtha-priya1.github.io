@@ -6,6 +6,7 @@ let score = 0;
 let gameRunning = false;
 let paused = false;
 let monsterTriggered = false;
+let jumpingOverMonster = false;
 
 // Dino
 let dinoY = 200;
@@ -53,12 +54,15 @@ function drawDino() {
 }
 
 function updateDino() {
-  dinoY += velocityY;
-  velocityY += gravity;
+  // During paused mid-jump, freeze position
+  if (!paused || jumpingOverMonster) {
+    dinoY += velocityY;
+    velocityY += gravity;
 
-  if (dinoY > 200) {
-    dinoY = 200;
-    velocityY = 0;
+    if (dinoY > 200) {
+      dinoY = 200;
+      velocityY = 0;
+    }
   }
 }
 
@@ -93,6 +97,13 @@ function updateObstacle() {
   // Collision
   if (obstacleType === "monster") {
     if (obstacleX < 90 && obstacleX > 50 && !monsterTriggered) {
+      monsterTriggered = true;
+
+      // If dino in mid-air, flag jumping
+      if (dinoY < 200) {
+        jumpingOverMonster = true;
+      }
+
       triggerQuestion();
     }
   } else {
@@ -105,8 +116,6 @@ function updateObstacle() {
 // Math question
 function triggerQuestion() {
   paused = true;
-  monsterTriggered = true;
-
   document.getElementById("questionBox").style.display = "block";
 
   const q = generateQuestion();
@@ -138,7 +147,9 @@ function submitAnswer() {
   const userAnswer = Number(document.getElementById("answerInput").value);
 
   if (userAnswer === correctAnswer) {
+    // Correct → continue jump naturally
     paused = false;
+    jumpingOverMonster = false;
     obstacleX = 800;
     document.getElementById("questionBox").style.display = "none";
     document.getElementById("answerInput").value = "";
@@ -150,9 +161,11 @@ function submitAnswer() {
       msg.style.display = "none";
     }, 1000);
 
-    monsterTriggered = false;
   } else {
-    gameOver();
+    // Wrong → gravity crush
+    velocityY = 20; // force dino down
+    paused = false;
+    jumpingOverMonster = false;
   }
 }
 
