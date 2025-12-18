@@ -5,6 +5,7 @@ let grade;
 let score = 0;
 let gameRunning = false;
 let paused = false;
+let monsterTriggered = false;
 
 // Dino
 let dinoY = 200;
@@ -28,7 +29,7 @@ function startGame(selectedGrade) {
   gameLoop();
 }
 
-// Main loop
+// Main game loop
 function gameLoop() {
   if (!gameRunning) return;
 
@@ -47,6 +48,7 @@ function gameLoop() {
 
 // Dino logic
 function drawDino() {
+  ctx.fillStyle = "green";
   ctx.fillRect(50, dinoY, 40, 40);
 }
 
@@ -70,28 +72,31 @@ document.addEventListener("keydown", e => {
 function drawObstacle() {
   if (obstacleType === "monster") {
     ctx.fillStyle = "red";
+    ctx.fillRect(obstacleX, 180, 40, 80); // tall monster
   } else {
     ctx.fillStyle = "black";
+    ctx.fillRect(obstacleX, 220, 30, 30); // normal obstacle
   }
-  ctx.fillRect(obstacleX, 220, 30, 30);
-  ctx.fillStyle = "black";
 }
 
 function updateObstacle() {
   obstacleX -= 5;
 
-  if (obstacleX < -30) {
+  if (obstacleX < -50) {
     obstacleX = 800;
     score++;
     document.getElementById("score").innerText = "Score: " + score;
     obstacleType = Math.random() < 0.3 ? "monster" : "normal";
+    monsterTriggered = false;
   }
 
   // Collision
-  if (obstacleX < 90 && obstacleX > 50 && dinoY >= 200) {
-    if (obstacleType === "monster") {
+  if (obstacleType === "monster") {
+    if (obstacleX < 90 && obstacleX > 50 && !monsterTriggered) {
       triggerQuestion();
-    } else {
+    }
+  } else {
+    if (obstacleX < 90 && obstacleX > 50 && dinoY >= 200) {
       gameOver();
     }
   }
@@ -100,6 +105,8 @@ function updateObstacle() {
 // Math question
 function triggerQuestion() {
   paused = true;
+  monsterTriggered = true;
+
   document.getElementById("questionBox").style.display = "block";
 
   const q = generateQuestion();
@@ -107,9 +114,10 @@ function triggerQuestion() {
   correctAnswer = q.answer;
 }
 
+// Generate grade-based question
 function generateQuestion() {
-  let a = Math.floor(Math.random() * 10);
-  let b = Math.floor(Math.random() * 10);
+  let a = Math.floor(Math.random() * 10) + 1;
+  let b = Math.floor(Math.random() * 10) + 1;
 
   if (grade === 5) {
     a += 10;
@@ -125,6 +133,7 @@ function generateQuestion() {
   };
 }
 
+// Submit answer
 function submitAnswer() {
   const userAnswer = Number(document.getElementById("answerInput").value);
 
@@ -133,6 +142,15 @@ function submitAnswer() {
     obstacleX = 800;
     document.getElementById("questionBox").style.display = "none";
     document.getElementById("answerInput").value = "";
+
+    // Show Yay message
+    const msg = document.getElementById("correctMessage");
+    msg.style.display = "block";
+    setTimeout(() => {
+      msg.style.display = "none";
+    }, 1000);
+
+    monsterTriggered = false;
   } else {
     gameOver();
   }

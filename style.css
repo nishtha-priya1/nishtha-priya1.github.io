@@ -29,3 +29,11 @@ canvas {
   width: 300px;
   margin: auto;
 }
+
+#correctMessage {
+  display: none;
+  color: green;
+  font-weight: bold;
+  margin-top: 10px;
+  font-size: 20px;
+}
