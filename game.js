@@ -17,6 +17,9 @@ const gravity = 1;
 let obstacleX = 800;
 let obstacleType = "normal"; // normal or monster
 
+// Game speed
+let gameSpeed = 5; // starting speed
+
 // Math
 let correctAnswer = null;
 
@@ -54,7 +57,6 @@ function drawDino() {
 }
 
 function updateDino() {
-  // During paused mid-jump, freeze position
   if (!paused || jumpingOverMonster) {
     dinoY += velocityY;
     velocityY += gravity;
@@ -76,15 +78,15 @@ document.addEventListener("keydown", e => {
 function drawObstacle() {
   if (obstacleType === "monster") {
     ctx.fillStyle = "red";
-    ctx.fillRect(obstacleX, 180, 40, 80); // tall monster
+    ctx.fillRect(obstacleX, 180, 40, 80);
   } else {
     ctx.fillStyle = "black";
-    ctx.fillRect(obstacleX, 220, 30, 30); // normal obstacle
+    ctx.fillRect(obstacleX, 220, 30, 30);
   }
 }
 
 function updateObstacle() {
-  obstacleX -= 5;
+  obstacleX -= gameSpeed;
 
   if (obstacleX < -50) {
     obstacleX = 800;
@@ -92,6 +94,9 @@ function updateObstacle() {
     document.getElementById("score").innerText = "Score: " + score;
     obstacleType = Math.random() < 0.3 ? "monster" : "normal";
     monsterTriggered = false;
+
+    // Slightly increase speed
+    gameSpeed += 0.2;
   }
 
   // Collision
@@ -143,10 +148,9 @@ function submitAnswer() {
   const userAnswer = Number(document.getElementById("answerInput").value);
 
   if (userAnswer === correctAnswer) {
-    // Correct → finish jump
+    // Correct → finish jump and let monster continue moving
     paused = false;
     jumpingOverMonster = false;
-    obstacleX = 800;
     document.getElementById("questionBox").style.display = "none";
     document.getElementById("answerInput").value = "";
 
@@ -157,7 +161,7 @@ function submitAnswer() {
       msg.style.display = "none";
     }, 1000);
 
-    monsterTriggered = false;
+    monsterTriggered = false; // allow monster to keep moving
   } else {
     // Wrong → gravity crush
     velocityY = 20;
@@ -175,7 +179,6 @@ function gameOver(message = "Game Over!") {
   const screen = document.getElementById("gameOverScreen");
   screen.style.display = "block";
 
-  // Update message
   document.getElementById("gameOverMessage").innerText = message;
 }
 
