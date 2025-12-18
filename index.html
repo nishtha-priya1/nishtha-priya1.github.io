@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Math Dino</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div id="menu">
+    <h1>🦖 Math Dino</h1>
+    <p>Select a grade level</p>
+    <button onclick="startGame(3)">Grade 3</button>
+    <button onclick="startGame(5)">Grade 5</button>
+    <button onclick="startGame(8)">Grade 8</button>
+  </div>
+
+  <div id="score">Score: 0</div>
+
+  <canvas id="game" width="800" height="300"></canvas>
+
+  <div id="questionBox">
+    <h2>Oh no! Defeat this monster!</h2>
+    <p id="questionText"></p>
+    <input type="number" id="answerInput">
+    <br><br>
+    <button onclick="submitAnswer()">Submit</button>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>

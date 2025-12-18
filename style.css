@@ -1,0 +1,31 @@
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
+
+#menu {
+  margin-top: 60px;
+}
+
+canvas {
+  border: 2px solid black;
+  display: none;
+  margin: auto;
+}
+
+#score {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 18px;
+  display: none;
+}
+
+#questionBox {
+  display: none;
+  background: white;
+  border: 2px solid black;
+  padding: 20px;
+  width: 300px;
+  margin: auto;
+}
